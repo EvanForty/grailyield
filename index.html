@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#121316">
+<link rel="icon" type="image/png" href="logo.png">
+<title>GrailYield — Rent the grail. Keep the grail.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#121316; --ink-2:#1b1d22; --ink-3:#262931; --line:#2f333c;
+  --paper:#f5f4ef; --mute:#a3a7b0; --mute-2:#70747e;
+  --gold:#ffc21a; --orange:#ff8a00; --amber:#ffa51f;
+  --blue:#1a6bff; --cyan:#3ccbff; --green:#2fd38a; --red:#ff4d4d;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --body:"Bricolage Grotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --ink:#121316; --paper:#f5f4ef; } }
+:root[data-theme="dark"]{ --ink:#121316; --paper:#f5f4ef; }
+:root[data-theme="light"]{ --ink:#121316; --paper:#f5f4ef; } /* brand is dark-only by design */
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(80px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px;border-radius:6px}
+.wrap{width:min(1240px,100% - 48px);margin-inline:auto}
+
+/* NAV */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(18,19,22,.82);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.05)}
+.nav .wrap{display:flex;align-items:center;gap:32px;height:76px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.01em}
+.brand img{width:40px;height:auto}
+.brand b{color:var(--gold);font-weight:800}
+.brand i{font-style:normal;color:var(--cyan)}
+.nav nav{display:flex;gap:28px;margin-left:auto}
+.nav nav a{text-decoration:none;color:var(--mute);font-size:16px;transition:color .2s}
+.nav nav a:hover{color:var(--paper)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;padding:14px 26px;font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:.02em;text-decoration:none;border:1.5px solid transparent;transition:transform .15s,background .2s,border-color .2s}
+.btn:active{transform:scale(.97)}
+.btn-ghost{border-color:#4a4e58;background:transparent}
+.btn-ghost:hover{border-color:var(--paper)}
+.btn-solid{background:var(--paper);color:var(--ink)}
+.btn-solid:hover{background:#fff}
+.btn-gold{background:var(--gold);color:#1a1300}
+.btn-gold:hover{background:#ffd24f}
+.btn-big{padding:22px 54px;font-size:16px}
+.wallet-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(47,211,138,.18)}
+.menu-btn{display:none;background:none;border:0;padding:8px}
+
+/* HERO */
+.hero{position:relative;padding:88px 0 120px;overflow:hidden}
+.hero::before{content:"";position:absolute;left:-260px;top:40px;width:720px;height:720px;border-radius:50%;background:radial-gradient(circle,rgba(255,138,0,.22),transparent 65%);pointer-events:none}
+.hero::after{content:"";position:absolute;right:-200px;bottom:-120px;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,rgba(26,107,255,.18),transparent 65%);pointer-events:none}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.08fr .92fr;gap:48px;align-items:center}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(46px,7.4vw,112px);line-height:.94;letter-spacing:-.045em;margin:0 0 34px}
+.hero h1 span{display:block}
+.hero h1 .hl{color:var(--gold);background:linear-gradient(92deg,var(--gold),var(--orange));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p.lede{font-size:clamp(18px,1.7vw,24px);color:#c9ccd3;max-width:40ch;margin:0 0 44px;line-height:1.5}
+.hero .ctas{display:flex;gap:18px;flex-wrap:wrap}
+
+/* HERO STAGE (animated contract) */
+.stage{position:relative;height:640px;perspective:1600px}
+.contract{position:absolute;inset:40px 30px 60px 70px;border-radius:30px;background:#1f2127;transform:rotateY(-14deg) rotateX(6deg) rotateZ(-3deg);transform-style:preserve-3d;box-shadow:24px 24px 0 var(--blue),0 50px 90px rgba(0,0,0,.55);padding:30px;display:flex;flex-direction:column;animation:bob 7s ease-in-out infinite}
+@keyframes bob{50%{transform:rotateY(-10deg) rotateX(4deg) rotateZ(-2deg) translateY(-10px)}}
+.contract-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:22px}
+.contract-head h3{font-family:var(--display);font-size:24px;margin:0;letter-spacing:-.02em}
+.contract-head small{color:var(--mute);font-size:15px}
+.contract-body{display:grid;grid-template-columns:200px 1fr;gap:26px;flex:1}
+.contract .slab{width:200px}
+.terms{display:flex;flex-direction:column;gap:12px}
+.term{background:var(--ink-3);border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;font-size:15px;opacity:.35;transition:opacity .5s, background .5s}
+.term b{font-family:var(--display);font-size:15px}
+.term.on{opacity:1}
+.term.on.ok{background:rgba(47,211,138,.12)}
+.term .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#353945;font-size:13px;flex:none;margin-right:10px}
+.term.on .ic{background:var(--green);color:#062b18}
+.term .lbl{display:flex;align-items:center}
+.timer{margin-top:auto}
+.timer .bar{height:12px;border-radius:99px;background:var(--ink-3);overflow:hidden}
+.timer .bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--cyan),var(--blue));transform-origin:left;transform:scaleX(1)}
+.timer .row{display:flex;justify-content:space-between;font-size:14px;color:var(--mute);margin-top:8px}
+.earned{font-family:var(--display);font-size:38px;font-weight:800;letter-spacing:-.03em;color:var(--gold);line-height:1}
+.earned-l{font-size:14px;color:var(--mute)}
+.lockbar{position:absolute;left:30px;top:84px;width:200px;height:0;border-radius:18px;border:3px solid var(--gold);opacity:0;pointer-events:none;transition:opacity .4s}
+.lockbar.on{opacity:1}
+.bubble{position:absolute;width:104px;height:104px;border-radius:50%;display:grid;place-items:center;z-index:3;box-shadow:0 0 0 14px rgba(255,255,255,.04)}
+.bubble svg{width:44px;height:44px}
+.b-lock{left:6px;top:6px;background:var(--gold);color:#1a1300;animation:float 6s ease-in-out infinite}
+.b-coin{right:-6px;bottom:120px;background:var(--cyan);color:#05283a;animation:float 6s ease-in-out -3s infinite}
+@keyframes float{50%{transform:translateY(-14px)}}
+.spark{position:absolute;color:#fff;animation:twinkle 3.2s ease-in-out infinite}
+.spark svg{width:100%;height:100%}
+@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
+.badge{position:absolute;left:50%;bottom:16px;transform:translate(-50%,40px) scale(.8);opacity:0;z-index:4;background:var(--orange);color:#1b0d00;font-family:var(--display);font-weight:800;font-size:20px;padding:18px 40px;border-radius:999px;box-shadow:0 20px 50px rgba(255,138,0,.45);white-space:nowrap;transition:transform .55s cubic-bezier(.2,1.4,.4,1),opacity .35s}
+.badge.on{transform:translate(-50%,0) scale(1);opacity:1}
+.pay-chip{position:absolute;right:40px;top:150px;z-index:5;background:var(--paper);color:var(--ink);font-family:var(--display);font-weight:700;padding:10px 18px;border-radius:999px;opacity:0;transform:translateX(60px)}
+.pay-chip.fly{animation:chip 1.4s cubic-bezier(.3,.7,.3,1) forwards}
+@keyframes chip{0%{opacity:0;transform:translate(60px,0)}25%{opacity:1;transform:translate(0,0)}75%{opacity:1;transform:translate(-120px,140px) scale(.9)}100%{opacity:0;transform:translate(-160px,180px) scale(.6)}}
+
+/* SLAB */
+.slab{position:relative;border-radius:12px;background:linear-gradient(160deg,#e9ecf1,#c3c8d1);padding:7px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),0 10px 22px rgba(0,0,0,.35)}
+.slab-label{display:flex;justify-content:space-between;align-items:center;background:#fff;border:2px solid #e2312c;border-radius:5px;padding:3px 7px;font-size:11px;font-weight:700;color:#1d1d1d;margin-bottom:6px;font-family:var(--body)}
+.slab-label .g{color:#e2312c}
+.card{position:relative;aspect-ratio:63/88;border-radius:7px;overflow:hidden;background:var(--t1);border:5px solid #f2cc3c;display:flex;flex-direction:column}
+.card img{width:100%;height:100%;object-fit:cover}
+.card .cn{display:flex;justify-content:space-between;align-items:baseline;padding:4px 6px 3px;font-size:11px;font-weight:700;color:#1c1c1c;background:linear-gradient(var(--t1),var(--t2))}
+.card .cn em{font-style:normal;color:#c2241f;font-size:9px}
+.card .art{margin:0 6px;flex:0 0 44%;border:3px solid #d9b13a;border-radius:2px;background:
+  repeating-linear-gradient(115deg,rgba(255,255,255,.0) 0 6px,rgba(255,255,255,.22) 6px 7px),
+  conic-gradient(from var(--ang,0deg) at 50% 55%,#ff9de2,#9fd8ff,#b0ffcf,#fff3a3,#ffb38a,#d7a6ff,#ff9de2);
+  position:relative;overflow:hidden}
+.card .art::after{content:"";position:absolute;inset:-40%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%);transform:translateX(-60%);animation:sheen 4.5s ease-in-out infinite}
+@keyframes sheen{60%,100%{transform:translateX(60%)}}
+.card .art .sil{position:absolute;inset:18% 26%;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(255,255,255,.9),var(--t2) 70%);opacity:.6;filter:blur(1px)}
+.card .lines{flex:1;padding:6px 8px;display:flex;flex-direction:column;gap:5px;background:linear-gradient(var(--t2),var(--t1))}
+.card .lines i{display:block;height:4px;border-radius:2px;background:rgba(0,0,0,.18)}
+.card .lines i:nth-child(2){width:80%}
+.card .lines i:nth-child(3){width:60%}
+.card .lines i:nth-child(4){width:90%;margin-top:auto}
+.slab.photo .photo-wrap{aspect-ratio:63/88;border-radius:7px;overflow:hidden;background:#0d0e11;display:grid;place-items:center}
+.slab.photo .photo-wrap img{width:100%;height:100%;object-fit:contain}
+.tile .list{font-family:var(--display);font-size:13px;color:var(--cyan)}
+.field-in{width:100%;background:var(--ink-3);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--paper);font:inherit;font-size:18px;margin:8px 0 20px}
+.field-in:focus{border-color:var(--gold);outline:none}
+.slab-name{font-weight:700;font-size:14px;margin-top:10px;color:var(--paper)}
+
+/* HOW */
+.how{padding:60px 0 120px}
+.how-panel{position:relative;background:var(--cyan);color:#081217;border-radius:36px;padding:110px 64px 80px;margin-top:40px}
+.how-tag{position:absolute;left:150px;top:-44px;background:var(--paper);color:var(--ink);font-family:var(--display);font-weight:800;font-size:clamp(28px,3.6vw,46px);letter-spacing:-.03em;padding:24px 44px;transform:rotate(-3deg);box-shadow:0 14px 30px rgba(0,0,0,.25)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:48px;list-style:none;margin:0;padding:0;counter-reset:s}
+.step{position:relative}
+.step .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:34px}
+.step .num{font-family:var(--display);font-weight:800;font-size:64px;line-height:.9;letter-spacing:-.04em}
+.step .arrow{position:absolute;right:-38px;top:46px;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--cyan);display:grid;place-items:center}
+.step:last-child .arrow{display:none}
+.step svg.ico{width:84px;height:84px}
+.step h3{font-family:var(--display);font-size:22px;letter-spacing:-.02em;margin:0 0 14px;line-height:1.2}
+.step p{margin:0;font-size:17px;line-height:1.6;max-width:30ch}
+
+/* VAULT */
+.vault{padding:40px 0 120px}
+.sec-h{font-family:var(--display);font-weight:800;font-size:clamp(36px,4.8vw,64px);letter-spacing:-.04em;line-height:1;margin:0 0 16px}
+.sec-p{color:var(--mute);max-width:56ch;margin:0 0 36px;font-size:18px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.tab{text-align:left;background:var(--ink-2);border:1.5px solid var(--line);border-radius:18px;padding:18px 22px;transition:border-color .2s}
+.tab:hover{border-color:#555b67}
+.tab small{display:block;color:var(--mute);font-size:14px}
+.tab b{display:block;font-family:var(--display);font-size:18px;margin:4px 0 2px}
+.tab span{font-size:14px;color:var(--mute)}
+.tab[aria-selected="true"]{border-color:var(--gold)}
+.tab[aria-selected="true"] span{color:var(--gold)}
+.vault-grid{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+.binder{background:var(--ink-2);border:1px solid var(--line);border-radius:26px;padding:30px}
+.binder h3{font-family:var(--display);font-size:26px;margin:0 0 6px;letter-spacing:-.02em}
+.binder > p{color:var(--mute);margin:0 0 26px;font-size:16px}
+.filters{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.chip{border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:8px 16px;font-size:15px;color:var(--mute)}
+.chip[aria-pressed="true"]{border-color:var(--paper);color:var(--paper)}
+.slabs{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:26px 20px}
+.tile{background:none;border:0;padding:0;text-align:left;border-radius:14px}
+.tile .slab{transition:transform .25s cubic-bezier(.2,.9,.3,1.3)}
+.tile:hover .slab{transform:translateY(-6px) rotate(-1.5deg)}
+.tile .meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
+.tile .meta b{font-size:15px}
+.tile .rate{font-family:var(--display);font-size:13px;color:var(--gold)}
+.tile .status{font-size:13px;color:var(--mute);margin-top:2px}
+.tile .status.rented{color:var(--cyan)}
+.tile.is-rented .slab{opacity:.62}
+.tile .tag{position:absolute;top:40px;right:-6px;z-index:2;background:var(--cyan);color:#05283a;font-family:var(--display);font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px}
+.tile .tag.mine{background:var(--gold);color:#1a1300}
+.tile{position:relative}
+.side{display:flex;flex-direction:column;gap:16px;position:sticky;top:96px}
+.panel{background:var(--ink-2);border:1px solid var(--line);border-radius:22px;padding:24px}
+.panel h4{font-family:var(--display);font-size:18px;margin:0 0 8px}
+.panel p{color:var(--mute);font-size:15px;margin:0 0 16px}
+.big{font-family:var(--display);font-weight:800;font-size:44px;letter-spacing:-.04em;line-height:1}
+.big small{font-size:16px;color:var(--mute);font-weight:500;letter-spacing:0;margin-left:6px}
+.kv{display:flex;justify-content:space-between;font-size:15px;padding:8px 0;border-top:1px solid var(--line)}
+.kv:first-of-type{margin-top:16px}
+.kv span{color:var(--mute)}
+.kv b.g{color:var(--gold)}
+.panel ol{margin:0;padding-left:20px;color:#c9ccd3;font-size:15px}
+.panel ol li{margin-bottom:8px}
+.panel ol li::marker{color:var(--orange);font-weight:700}
+.panel .btn{width:100%}
+.addr{font-family:var(--display);font-size:15px;word-break:break-all}
+
+/* OUTCOMES */
+.outcomes{padding:40px 0 120px}
+.out-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.out{background:var(--ink-2);border:1px solid var(--line);border-radius:22px;padding:30px;min-height:260px}
+.out .oi{width:52px;height:52px;border-radius:14px;background:var(--paper);color:var(--ink);display:grid;place-items:center;margin-bottom:28px}
+.out .oi svg{width:26px;height:26px}
+.out h3{font-family:var(--display);font-size:22px;margin:0 0 12px;letter-spacing:-.02em}
+.out p{color:var(--mute);margin:0;font-size:16px}
+.out.hot{background:var(--gold);color:#1a1300;border-color:var(--gold)}
+.out.hot p{color:#3a2c00}
+.out.hot .oi{background:#1a1300;color:var(--gold)}
+
+/* CALC */
+.calc{padding:20px 0 120px}
+.calc-box{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:30px;overflow:hidden;border:1px solid var(--line)}
+.calc-in{background:var(--ink-2);padding:44px}
+.calc-out{background:var(--blue);padding:44px;color:#fff;display:flex;flex-direction:column;gap:22px}
+.field{margin-bottom:28px}
+.field label{display:flex;justify-content:space-between;font-size:16px;margin-bottom:12px}
+.field label output{font-family:var(--display);font-weight:700;color:var(--gold)}
+input[type=range]{width:100%;accent-color:var(--gold);height:28px}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.vs > div{background:rgba(255,255,255,.12);border-radius:18px;padding:20px}
+.vs small{display:block;font-size:14px;opacity:.85;margin-bottom:6px}
+.vs b{font-family:var(--display);font-size:clamp(24px,2.6vw,34px);letter-spacing:-.03em;display:block;line-height:1.1}
+.vs .loss b{color:#ffd0d0}
+.calc-out .note{font-size:15px;opacity:.85;margin:0}
+.calc-out h3{font-family:var(--display);font-size:clamp(26px,3vw,40px);letter-spacing:-.03em;margin:0;line-height:1.05}
+
+/* RAILS */
+.rails{padding:20px 0 120px}
+.rails-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px}
+.quote{display:inline-block;margin-top:26px;background:var(--cyan);color:#081217;font-family:var(--display);font-weight:700;font-size:clamp(22px,2.4vw,32px);line-height:1.15;letter-spacing:-.02em;padding:28px 32px;border-radius:20px;transform:rotate(-2deg);max-width:20ch}
+.rail{display:grid;grid-template-columns:150px 1fr;gap:24px;padding:24px 0;border-top:1px solid var(--line)}
+.rail:last-child{border-bottom:1px solid var(--line)}
+.rail b{font-family:var(--display);font-size:17px}
+.rail p{margin:0;color:var(--mute);font-size:16px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--line);padding:56px 0 40px}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+.foot h5{font-family:var(--display);font-size:15px;margin:0 0 14px}
+.foot ul{list-style:none;margin:0;padding:0}
+.foot li{margin-bottom:8px}
+.foot a{color:var(--mute);text-decoration:none;font-size:15px}
+.foot a:hover{color:var(--paper)}
+.foot p{color:var(--mute);font-size:15px;max-width:34ch}
+.legal{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:44px;padding-top:24px;border-top:1px solid var(--line);color:var(--mute-2);font-size:13px}
+
+/* MODALS */
+.scrim{position:fixed;inset:0;z-index:100;background:rgba(5,6,8,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+.scrim.open{display:flex;animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.modal{background:var(--ink-2);border:1px solid var(--line);border-radius:26px;width:min(460px,100%);max-height:calc(100% - 20px);overflow:auto;padding:28px;animation:pop .3s cubic-bezier(.2,1.3,.4,1)}
+.modal.wide{width:min(760px,100%)}
+@keyframes pop{from{transform:translateY(20px) scale(.96);opacity:0}}
+.modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-h h3{font-family:var(--display);font-size:22px;margin:0;letter-spacing:-.02em}
+.x{background:var(--ink-3);border:0;width:36px;height:36px;border-radius:50%;font-size:18px}
+.wlist{display:flex;flex-direction:column;gap:10px}
+.wbtn{display:flex;align-items:center;gap:14px;background:var(--ink-3);border:1.5px solid transparent;border-radius:16px;padding:14px 16px;text-align:left;text-decoration:none}
+.wbtn:hover{border-color:var(--gold)}
+.wbtn img,.wbtn .wi{width:36px;height:36px;border-radius:10px;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:800}
+.wbtn b{flex:1}
+.wbtn small{color:var(--mute);font-size:13px}
+.wbtn small.ok{color:var(--green)}
+.msg{font-size:14px;color:var(--mute);margin:16px 0 0}
+.msg.err{color:#ff8f8f}
+.rent-grid{display:grid;grid-template-columns:220px 1fr;gap:28px}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0 20px}
+.seg.two{grid-template-columns:1fr 1fr}
+.seg button{background:var(--ink-3);border:1.5px solid transparent;border-radius:12px;padding:10px 4px;font-size:15px}
+.seg button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold)}
+.lab{font-size:14px;color:var(--mute)}
+.total{font-family:var(--display);font-size:34px;font-weight:800;letter-spacing:-.03em;margin:4px 0 6px}
+.receipt{margin-top:16px;border:2px dashed var(--gold);border-radius:16px;padding:16px;font-size:14px;display:none}
+.receipt.on{display:block;animation:pop .4s cubic-bezier(.2,1.3,.4,1)}
+.receipt b{font-family:var(--display);color:var(--gold)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,120px);z-index:200;background:var(--paper);color:var(--ink);padding:14px 22px;border-radius:999px;font-weight:700;transition:transform .35s cubic-bezier(.2,1.3,.4,1);max-width:calc(100% - 32px);text-align:center}
+.toast.on{transform:translate(-50%,0)}
+
+/* REVEAL (single orchestrated hero load + quiet section reveals) */
+.load{opacity:0;transform:translateY(28px)}
+.ready .load{animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--d,0) * 120ms)}
+@keyframes rise{to{opacity:1;transform:none}}
+
+@media (max-width:1080px){
+  .hero .wrap{grid-template-columns:1fr}
+  .stage{height:560px;max-width:620px;width:100%;margin-inline:auto}
+  .steps{grid-template-columns:1fr 1fr;gap:56px 40px}
+  .step .arrow{display:none}
+  .vault-grid{grid-template-columns:1fr}
+  .side{position:static}
+  .rails-grid{grid-template-columns:1fr;gap:32px}
+  .calc-box{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .nav nav{display:none}
+  .nav nav.open{display:flex;position:absolute;top:76px;left:0;right:0;flex-direction:column;gap:0;background:var(--ink);border-bottom:1px solid var(--line);padding:8px 24px 16px}
+  .nav nav.open a{padding:12px 0}
+  .menu-btn{display:block;margin-left:auto}
+  .nav .wrap{gap:12px}
+  .nav .btn{padding:11px 16px;font-size:12px}
+  .brand{font-size:18px}.brand img{width:32px}
+  .hero{padding:48px 0 80px}
+  .stage{height:520px}
+  .contract{inset:30px 6px 60px 20px;padding:20px}
+  .contract-body{grid-template-columns:130px 1fr;gap:14px}
+  .contract .slab{width:130px}
+  .term{font-size:12px;padding:9px 10px}.term b{font-size:12px}.term .ic{display:none}
+  .earned{font-size:28px}
+  .bubble{width:74px;height:74px}.bubble svg{width:32px;height:32px}
+  .badge{font-size:15px;padding:14px 26px}
+  .how-panel{padding:90px 26px 50px;border-radius:26px}
+  .how-tag{left:20px}
+  .steps{grid-template-columns:1fr}
+  .tabs{grid-template-columns:1fr 1fr}
+  .binder{padding:20px}
+  .slabs{grid-template-columns:repeat(2,1fr);gap:22px 14px}
+  .out-grid{grid-template-columns:1fr}
+  .calc-in,.calc-out{padding:28px}
+  .rail{grid-template-columns:1fr;gap:6px}
+  .foot{grid-template-columns:1fr 1fr}
+  .foot > div:first-child{grid-column:1/-1}
+  .rent-grid{grid-template-columns:1fr}
+  .rent-grid .slab{max-width:200px;margin-inline:auto}
+  .btn-big{padding:18px 30px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  .load{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="GrailYield home"><img src="logo.png" alt=""><span><b>Grail</b><i>Yield</i></span></a>
+    <nav id="mainnav" aria-label="Primary">
+      <a href="#how">How it works</a>
+      <a href="#vault">Rent a grail</a>
+      <a href="#outcomes">Display receipt</a>
+      <a href="#yield">Yield math</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mainnav">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <button class="btn btn-ghost wallet-pill" id="navWallet">Connect wallet</button>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <h1><span class="load" style="--d:0">Stop</span><span class="load" style="--d:1">selling.</span><span class="load hl" style="--d:2">Rent the grail.</span></h1>
+      <p class="lede load" style="--d:3">GrailYield locks your Collector Crypt pNFT in a rental contract. Renters pay USDC or CARDS for a fixed window and get a display receipt. You keep the card, the redemption rights, and the yield.</p>
+      <div class="ctas load" style="--d:4">
+        <a class="btn btn-solid btn-big" href="#vault">Browse grails</a>
+        <a class="btn btn-ghost btn-big" href="#how">How it works</a>
+      </div>
+    </div>
+
+    <div class="stage load" style="--d:2" aria-label="Animated example of a rental lease">
+      <div class="bubble b-lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+      <div class="bubble b-coin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 16V4M3 8l4-4 4 4M17 8v12M21 16l-4 4-4-4"/></svg></div>
+      <span class="spark" style="left:0;top:58%;width:38px;height:38px" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c.6 6.5 5.5 11.4 12 12-6.5.6-11.4 5.5-12 12-.6-6.5-5.5-11.4-12-12C6.5 11.4 11.4 6.5 12 0z"/></svg></span>
+      <span class="spark" style="right:20px;top:14%;width:30px;height:30px;animation-delay:-1.4s" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c.6 6.5 5.5 11.4 12 12-6.5.6-11.4 5.5-12 12-.6-6.5-5.5-11.4-12-12C6.5 11.4 11.4 6.5 12 0z"/></svg></span>
+      <span class="pay-chip" id="payChip">+42 USDC</span>
+
+      <div class="contract">
+        <div class="contract-head"><h3 id="hcTitle">Rental contract</h3><small id="hcStep">1 / 4</small></div>
+        <div class="contract-body">
+          <div id="heroSlab"></div>
+          <div class="terms">
+            <div class="term" id="t1"><span class="lbl"><span class="ic">✓</span>pNFT locked</span><b>Owner</b></div>
+            <div class="term" id="t2"><span class="lbl"><span class="ic">✓</span>Window</span><b id="hWin">7 days</b></div>
+            <div class="term" id="t3"><span class="lbl"><span class="ic">✓</span>Renter paid</span><b id="hPaid">42 USDC</b></div>
+            <div class="term" id="t4"><span class="lbl"><span class="ic">✓</span>Receipt</span><b>Display only</b></div>
+            <div style="margin-top:6px">
+              <div class="earned" id="hEarn">$0.00</div>
+              <div class="earned-l">earned by owner, slab never sold</div>
+            </div>
+          </div>
+        </div>
+        <div class="timer">
+          <div class="bar"><i id="hBar"></i></div>
+          <div class="row"><span id="hLeft">Lease not started</span><span>Returns to owner at expiry</span></div>
+        </div>
+      </div>
+      <div class="badge" id="hBadge">Display receipt issued</div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="how-panel">
+      <div class="how-tag">How it works</div>
+      <ol class="steps">
+        <li class="step">
+          <div class="top">
+            <svg class="ico" viewBox="0 0 84 84" fill="none" stroke="#081217" stroke-width="4" stroke-linejoin="round"><rect x="20" y="8" width="44" height="58" rx="5" fill="#fff"/><rect x="28" y="16" width="28" height="8" fill="#ff4d4d" stroke="none"/><rect x="28" y="28" width="28" height="22" fill="#081217" stroke="none"/><rect x="14" y="44" width="56" height="34" rx="6" fill="#ffc21a"/><rect x="34" y="56" width="16" height="12" rx="2" fill="#fff"/></svg>
+            <span class="num">01</span>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <h3>Lock the slab</h3>
+          <p>Move a Collector Crypt pNFT into a rental contract. The physical slab stays in the insured vault the whole time.</p>
+        </li>
+        <li class="step">
+          <div class="top">
+            <svg class="ico" viewBox="0 0 84 84" fill="none" stroke="#081217" stroke-width="4"><circle cx="42" cy="42" r="34" fill="#fff"/><path d="M42 20v22l14 10" stroke-linecap="round"/><circle cx="42" cy="42" r="4" fill="#081217"/></svg>
+            <span class="num">02</span>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <h3>Set the window</h3>
+          <p>Pick a daily rate in USDC or CARDS and the lease lengths you’ll accept. You can end the lease at any expiry.</p>
+        </li>
+        <li class="step">
+          <div class="top">
+            <svg class="ico" viewBox="0 0 84 84" fill="none" stroke="#081217" stroke-width="4" stroke-linejoin="round"><path d="M16 8h52v68l-9-6-8 6-9-6-9 6-8-6-9 6z" fill="#fff"/><path d="M28 26h28M28 38h28M28 50h16" stroke-linecap="round"/><circle cx="58" cy="52" r="9" fill="#1a6bff"/></svg>
+            <span class="num">03</span>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <h3>Renter gets a receipt</h3>
+          <p>The renter pays up front and receives a non-transferable display receipt for profiles, stream overlays and showcase galleries.</p>
+        </li>
+        <li class="step">
+          <div class="top">
+            <svg class="ico" viewBox="0 0 84 84" fill="none" stroke="#081217" stroke-width="4" stroke-linecap="round"><circle cx="42" cy="42" r="34" fill="#fff"/><path d="M26 36a17 17 0 0 1 30-6M58 48a17 17 0 0 1-30 6"/><path d="M56 22v8h-8M28 62v-8h8"/></svg>
+            <span class="num">04</span>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <h3>It comes back</h3>
+          <p>At expiry, or if the renter defaults, the pNFT returns to the owner automatically. No claims process, no chasing.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="vault" id="vault">
+  <div class="wrap">
+    <h2 class="sec-h">Rent a grail</h2>
+    <p class="sec-p">Every listing is a specific graded slab with a daily rate. Connect a Solana wallet, pick a window, and the display receipt lands in your wallet.</p>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="vault-grid">
+      <div class="binder">
+        <h3 id="bTitle"></h3>
+        <p id="bDesc"></p>
+        <div class="filters" id="filters">
+          <button class="chip" aria-pressed="true" data-f="all">All</button>
+          <button class="chip" aria-pressed="false" data-f="open">Available now</button>
+          <button class="chip" aria-pressed="false" data-f="rented">On lease</button>
+        </div>
+        <div class="slabs" id="slabs"></div>
+      </div>
+      <aside class="side">
+        <div class="panel">
+          <div class="big" id="sCount">16<small>grails listed</small></div>
+          <div class="kv"><span>Available now</span><b id="sOpen">—</b></div>
+          <div class="kv"><span>Floor rate</span><b class="g" id="sFloor">—</b></div>
+          <div class="kv"><span>Grade</span><b>PSA 9–10</b></div>
+        </div>
+        <div class="panel" id="walletPanel">
+          <h4>Connect your wallet</h4>
+          <p>Use Phantom, Solflare, Backpack or any Wallet Standard wallet. Renting needs USDC or CARDS on Solana.</p>
+          <button class="btn btn-solid" id="panelConnect">Connect wallet</button>
+        </div>
+        <div class="panel">
+          <h4>Listing your own grail</h4>
+          <ol>
+            <li>Connect the wallet holding the Collector Crypt pNFT.</li>
+            <li>Lock it into a rental contract and set a daily rate.</li>
+            <li>Collect rent each lease. Redeem the slab whenever it’s not on lease.</li>
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="outcomes" id="outcomes">
+  <div class="wrap">
+    <h2 class="sec-h">One slab. Three ways it ends.</h2>
+    <p class="sec-p">A lease is a time-boxed right to show the card, nothing more. Ownership, redemption and the vaulted slab never move to the renter.</p>
+    <div class="out-grid">
+      <div class="out">
+        <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <h3>Lease runs to expiry</h3>
+        <p>The window closes, the display receipt goes inactive, and the pNFT is back in the owner’s control. List it again or redeem it.</p>
+      </div>
+      <div class="out">
+        <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12h12M12 6l6 6-6 6"/></svg></div>
+        <h3>Owner ends at expiry</h3>
+        <p>Owners can decline to renew at the end of any window. Rent already paid stays with the owner; renewals are never automatic.</p>
+      </div>
+      <div class="out hot">
+        <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></div>
+        <h3>Renter defaults</h3>
+        <p>Miss an extension payment and the contract returns the pNFT to the owner on its own. Nothing to dispute, nothing to recover.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="calc" id="yield">
+  <div class="wrap">
+    <h2 class="sec-h">Why not just sell?</h2>
+    <p class="sec-p">Instant buyback pays 85–93% of value and the grail is gone. Lending unlocks cash but not the card. Renting keeps both.</p>
+    <div class="calc-box">
+      <div class="calc-in">
+        <div class="field"><label for="cVal">Slab value <output id="oVal"></output></label><input type="range" id="cVal" min="200" max="20000" step="100" value="4200"></div>
+        <div class="field"><label for="cRate">Daily rent, % of value <output id="oRate"></output></label><input type="range" id="cRate" min="0.05" max="0.5" step="0.01" value="0.14"></div>
+        <div class="field"><label for="cUtil">Days on lease per year <output id="oUtil"></output></label><input type="range" id="cUtil" min="30" max="365" step="5" value="180"></div>
+        <div class="field" style="margin:0"><label for="cBuy">Buyback offer <output id="oBuy"></output></label><input type="range" id="cBuy" min="85" max="93" step="1" value="89"></div>
+      </div>
+      <div class="calc-out" aria-live="polite">
+        <h3 id="cHead"></h3>
+        <div class="vs">
+          <div><small>Rent for a year</small><b id="cRent"></b><small style="margin-top:6px">and you still own the slab</small></div>
+          <div class="loss"><small>Sell into buyback</small><b id="cLoss"></b><small style="margin-top:6px">left on the table, card gone</small></div>
+        </div>
+        <p class="note">Illustrative only. Real rates depend on demand for each card; nothing here is financial advice.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rails" id="rails">
+  <div class="wrap rails-grid">
+    <div>
+      <h2 class="sec-h">Built on rails that already work</h2>
+      <p class="sec-p" style="margin:0">GrailYield doesn’t vault, grade or ship anything. It sits on top of Collector Crypt’s custody and redemption and adds the one thing missing: a way to earn from a card without letting it go.</p>
+      <div class="quote">Buyback is an exit. A lease is a reason to keep holding.</div>
+    </div>
+    <div>
+      <div class="rail"><b>Custody</b><p>Slabs stay in the same secured, insured vaults. The contract only locks the pNFT that represents the card.</p></div>
+      <div class="rail"><b>Payments</b><p>Rent is paid up front in USDC or CARDS for the whole window and settles to the owner when the lease starts.</p></div>
+      <div class="rail"><b>Receipts</b><p>Display receipts are non-transferable and can’t be sold, lent or used as collateral. They exist to be shown.</p></div>
+      <div class="rail"><b>Redemption</b><p>The owner keeps redemption rights. Once a lease ends, the pNFT redeems through the normal Collector Crypt flow.</p></div>
+      <div class="rail"><b>Solana</b><p>Connect Phantom, Solflare, Backpack or any Wallet Standard wallet. Contracts, receipts and pNFTs all live on Solana.</p></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#top"><img src="logo.png" alt=""><span><b>Grail</b><i>Yield</i></span></a>
+        <p style="margin-top:14px">Grail rental for locked pNFTs. Owners earn, renters show, slabs stay put.</p>
+      </div>
+      <div><h5>Product</h5><ul><li><a href="#vault">Rent a grail</a></li><li><a href="#outcomes">Display receipt</a></li><li><a href="#how">How it works</a></li></ul></div>
+      <div><h5>Ecosystem</h5><ul><li><a href="https://collectorcrypt.com/" target="_blank" rel="noopener">Collector Crypt</a></li><li><a href="https://phantom.com/" target="_blank" rel="noopener">Phantom wallet</a></li><li><a href="https://solana.com/" target="_blank" rel="noopener">Solana</a></li></ul></div>
+    </div>
+    <div class="legal"><span>GrailYield © 2026</span><span>Not affiliated with or endorsed by Collector Crypt. Card names are used for identification only.</span></div>
+  </div>
+</footer>
+
+<!-- Wallet modal -->
+<div class="scrim" id="walletScrim" role="dialog" aria-modal="true" aria-labelledby="wTitle">
+  <div class="modal">
+    <div class="modal-h"><h3 id="wTitle">Connect a wallet</h3><button class="x" data-close aria-label="Close">×</button></div>
+    <div id="wBody"></div>
+    <p class="msg" id="wMsg"></p>
+  </div>
+</div>
+
+<!-- Rent modal -->
+<div class="scrim" id="rentScrim" role="dialog" aria-modal="true" aria-labelledby="rTitle">
+  <div class="modal wide">
+    <div class="modal-h"><h3 id="rTitle">Rent</h3><button class="x" data-close aria-label="Close">×</button></div>
+    <div class="rent-grid">
+      <div id="rSlab"></div>
+      <div>
+        <div class="lab">Lease window</div>
+        <div class="seg" id="rWin"></div>
+        <div class="lab">Pay with</div>
+        <div class="seg two" id="rCur"></div>
+        <div class="lab">Total, paid up front</div>
+        <div class="total" id="rTotal"></div>
+        <div class="kv"><span>Daily rate</span><b id="rRate"></b></div>
+        <div class="kv"><span>Lease ends</span><b id="rEnd"></b></div>
+        <div class="kv" style="margin-bottom:18px"><span>You receive</span><b>Display receipt, non-transferable</b></div>
+        <button class="btn btn-gold" style="width:100%" id="rGo">Rent</button>
+        <p class="msg" id="rMsg"></p>
+        <div class="receipt" id="rReceipt"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="scrim" id="listScrim" role="dialog" aria-modal="true" aria-labelledby="lTitle">
+  <div class="modal wide">
+    <div class="modal-h"><h3 id="lTitle">List for rent</h3><button class="x" data-close aria-label="Close">×</button></div>
+    <div class="rent-grid">
+      <div id="lSlab"></div>
+      <div>
+        <label class="lab" for="lRate">Daily rate in USDC</label>
+        <input class="field-in" id="lRate" type="number" min="0.01" step="0.01" value="5.00" inputmode="decimal">
+        <div class="lab">Lease windows you accept</div>
+        <div id="lWins" style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 22px">
+          <label><input type="checkbox" value="3"> 3 days</label><label><input type="checkbox" value="7" checked> 7 days</label><label><input type="checkbox" value="14" checked> 14 days</label><label><input type="checkbox" value="30"> 30 days</label>
+        </div>
+        <p class="msg" style="margin:0 0 18px">You keep redemption rights. At expiry or on renter default, the pNFT returns to you automatically.</p>
+        <button class="btn btn-gold" style="width:100%" id="lGo">Sign listing</button>
+        <p class="msg" id="lMsg"></p>
+        <div class="receipt" id="lDone"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.98.0/lib/index.iife.min.js"></script>
+<script src="config.js"></script>
+<script>
+/* ============ CONFIG ============ */
+// Edit values in config.js. These are fallbacks.
+const CFG = window.GY_CONFIG || {};
+const RPC_URL = CFG.RPC_URL || "";
+const CC_COLLECTION = CFG.CC_COLLECTION || "";
+const VAULT_ADDRESSES = (CFG.VAULT_ADDRESSES || []).filter(Boolean);
+const CARDS_PER_USDC = CFG.CARDS_PER_USDC || 8;
+
+/* ============ DATA ============
+   Set `mint` on a listing (via MINTS below) and its picture loads from that pNFT's on-chain metadata. */
+const MINTS = CFG.MINTS || {};
+const TYPE = {fire:["#ffb28a","#ff7a45"],water:["#a9d8ff","#5aa9f0"],grass:["#c6f0a2","#7cc55a"],electric:["#fff0a0","#f5cf3b"],psychic:["#e6c2ff","#b07ee8"],fighting:["#f1c9a0","#c98d55"],colorless:["#f2efe8","#d6d0c4"],dark:["#b8b4c8","#6e6886"],dragon:["#f3dca2","#c4a248"]};
+// Official card images (Pokémon TCG API CDN), keyed by set. Card numbers follow each set's holo order.
+const IMG_SET = {base:"base1",jungle:"base2",fossil:"base3",rocket:"base5"};
+const stockImage = (c,big) => c.code ? `https://images.pokemontcg.io/${c.code}/${c.num}${big?"_hires":""}.png` : null;
+const SETS = [
+ {id:"base",era:"Pokémon, 1999",name:"Base Set Holos",grade:"PSA 9",desc:"The original 16 holos, from Alakazam to Zapdos, each graded PSA 9.",
+  cards:[["Alakazam","psychic"],["Blastoise","water"],["Chansey","colorless"],["Charizard","fire"],["Clefairy","colorless"],["Gyarados","water"],["Hitmonchan","fighting"],["Machamp","fighting"],["Magneton","electric"],["Mewtwo","psychic"],["Nidoking","grass"],["Ninetales","fire"],["Poliwrath","water"],["Raichu","electric"],["Venusaur","grass"],["Zapdos","electric"]]},
+ {id:"jungle",era:"Pokémon, 1999",name:"Jungle Holos",grade:"PSA 9",desc:"All 16 Jungle holo rares, from Clefable to Wigglytuff, each graded PSA 9.",
+  cards:[["Clefable","colorless"],["Electrode","electric"],["Flareon","fire"],["Jolteon","electric"],["Kangaskhan","colorless"],["Mr. Mime","psychic"],["Nidoqueen","grass"],["Pidgeot","colorless"],["Pinsir","grass"],["Scyther","grass"],["Snorlax","colorless"],["Vaporeon","water"],["Venomoth","grass"],["Victreebel","grass"],["Vileplume","grass"],["Wigglytuff","colorless"]]},
+ {id:"fossil",era:"Pokémon, 1999",name:"Fossil Holos",grade:"PSA 9",desc:"All 15 holographic rares from Fossil, from Aerodactyl to the legendary birds.",
+  cards:[["Aerodactyl","fighting"],["Articuno","water"],["Ditto","colorless"],["Dragonite","dragon"],["Gengar","psychic"],["Haunter","psychic"],["Hitmonlee","fighting"],["Hypno","psychic"],["Kabutops","fighting"],["Lapras","water"],["Magneton","electric"],["Moltres","fire"],["Muk","grass"],["Raichu","electric"],["Zapdos","electric"]]},
+ {id:"rocket",era:"Pokémon, 2000",name:"Rocket Holos",grade:"PSA 10",desc:"Team Rocket’s 16 holo rares plus Rainbow Energy, graded PSA 10.",
+  cards:[["Dark Alakazam","psychic"],["Dark Arbok","grass"],["Dark Blastoise","water"],["Dark Charizard","fire"],["Dark Dragonite","dragon"],["Dark Dugtrio","fighting"],["Dark Golbat","grass"],["Dark Gyarados","water"],["Dark Hypno","psychic"],["Dark Machamp","fighting"],["Dark Magneton","electric"],["Dark Slowbro","psychic"],["Dark Vileplume","grass"],["Dark Weezing","grass"],["Here Comes Team Rocket!","dark"],["Rocket’s Sneak Attack","dark"],["Rainbow Energy","colorless"]]}
+];
+const PREMIUM = {"Charizard":9,"Dark Charizard":6,"Blastoise":4,"Venusaur":3.5,"Mewtwo":2.4,"Dragonite":2.2,"Gengar":2.4,"Zapdos":2,"Dark Blastoise":2.6,"Gyarados":2.2,"Moltres":1.8,"Articuno":1.8,"Dark Dragonite":2.4,"Raichu":1.8};
+function hash(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+SETS.forEach(set=>{
+  set.cards = set.cards.map(([name,type],i)=>{
+    const h=hash(set.id+name);
+    const rate=Math.round((1.5+(h%400)/100)*(PREMIUM[name]||1)*(set.grade==="PSA 10"?1.6:1)*100)/100;
+    const rented = h%3===0;
+    return {num:i+1,name,type,rate,rentedDays:rented?1+(h%13):0,image:null,code:IMG_SET[set.id]||null,mint:MINTS[set.id+':'+(i+1)]||null,set:set.name,grade:set.grade};
+  });
+});
+
+/* ============ SLAB RENDER ============ */
+const REG=new Map();let regN=0;
+// If the on-chain image fails, fall back to the official card image; if that fails too, draw the slab art.
+function imgFail(el){const c=REG.get(el.dataset.k);if(!c)return;if(el.dataset.src==="chain")c.image=null;else c.stockFail=true;el.closest(".slab").outerHTML=slabHTML(c,el.dataset.big==="1")}
+function slabHTML(c,big){
+  const [t1,t2]=TYPE[c.type]||TYPE.colorless;
+  const label=`<div class="slab-label"><span>#${c.num} ${esc(c.set.replace(" Holos",""))}</span><span class="g">${esc(c.grade)}</span></div>`;
+  const stock=!c.stockFail&&stockImage(c,big), src=c.image||stock;
+  if(src){const k="c"+(regN++);REG.set(k,c);
+    return `<div class="slab photo">${label}<div class="photo-wrap"><img src="${esc(src)}" alt="${esc(c.name)}, ${esc(c.set)} #${c.num}" ${big?"":'loading="lazy" '}decoding="async" referrerpolicy="no-referrer" data-k="${k}" data-src="${c.image?"chain":"stock"}" data-big="${big?1:0}" onerror="imgFail(this)"></div></div>`}
+  const inner = `<div class="cn"><span>${esc(c.name)}</span><em>${esc(c.grade)}</em></div><div class="art" style="--ang:${hash(c.name)%360}deg"><span class="sil"></span></div><div class="lines"><i></i><i></i><i></i><i></i></div>`;
+  return `<div class="slab">${label}<div class="card" style="--t1:${t1};--t2:${t2}">${inner}</div></div>`;
+}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+const $=s=>document.querySelector(s);
+
+/* ============ VAULT UI ============ */
+let curSet=0, curFilter="all";
+const MY={id:"mine",era:"Your wallet",name:"Your cards",grade:"",desc:"",cards:[],state:"idle"};
+const allSets=()=>wallet.address?[...SETS,MY]:SETS;
+function renderTabs(){
+  if(curSet>=allSets().length)curSet=0;
+  $("#tabs").innerHTML=allSets().map((s,i)=>`<button class="tab" role="tab" aria-selected="${i===curSet}" data-i="${i}"><small>${s.era}</small><b>${s.name}</b><span>${s===MY?(MY.state==="ready"?MY.cards.length+" pNFTs":MY.state==="loading"?"Loading…":"—"):s.cards.length+" cards, "+s.grade}</span></button>`).join("");
+}
+function renderSlabs(){
+  const s=allSets()[curSet];
+  $("#bTitle").textContent=s.name;
+  if(s===MY){
+    $("#filters").style.display="none";
+    $("#bDesc").textContent="pNFTs in your connected wallet, with images from their on-chain metadata. Pick one to list it for rent.";
+    $("#slabs").innerHTML = MY.state==="loading"?`<p style="color:var(--mute)">Loading your cards…</p>`
+      : MY.state==="error"?`<p style="color:#ff8f8f">${esc(MY.err)}</p>`
+      : !MY.cards.length?`<p style="color:var(--mute)">No ${CC_COLLECTION?"Collector Crypt ":""}pNFTs found in this wallet.</p>`
+      : MY.cards.map((c,i)=>`<button class="tile" data-i="${i}" aria-label="List ${esc(c.name)} for rent">${slabHTML(c)}<div class="meta"><b>${esc(c.name)}</b></div><div class="status"><span class="list">List for rent</span></div></button>`).join("");
+    $("#sCount").innerHTML=`${MY.cards.length}<small>pNFTs in wallet</small>`;$("#sOpen").textContent="—";$("#sFloor").textContent="—";
+    return;
+  }
+  $("#filters").style.display="";
+  $("#bDesc").textContent=s.desc;
+  const list=s.cards.filter(c=>curFilter==="all"||(curFilter==="open"?!c.rentedDays:c.rentedDays));
+  $("#slabs").innerHTML = list.length ? list.map(c=>{
+    const i=s.cards.indexOf(c);
+    return `<button class="tile ${c.rentedDays?"is-rented":""}" data-i="${i}" aria-label="${esc(c.name)}, ${c.rentedDays?"on lease":"rent for $"+c.rate.toFixed(2)+" a day"}">
+      ${c.rentedDays?`<span class="tag ${c.mine?"mine":""}">${c.mine?"Your lease":"On lease"}</span>`:""}
+      ${slabHTML(c)}
+      <div class="meta"><b>${esc(c.name)}</b><span class="rate">$${c.rate.toFixed(2)}/d</span></div>
+      <div class="status ${c.rentedDays?"rented":""}">${c.rentedDays?`Free in ${c.rentedDays} day${c.rentedDays>1?"s":""}`:"Available now"}</div>
+    </button>`}).join("") : `<p style="color:var(--mute)">Nothing on lease in this set right now. Every grail here is available.</p>`;
+  const open=s.cards.filter(c=>!c.rentedDays);
+  $("#sCount").innerHTML=`${s.cards.length}<small>grails listed</small>`;
+  $("#sOpen").textContent=`${open.length} of ${s.cards.length}`;
+  $("#sFloor").textContent=`$${Math.min(...s.cards.map(c=>c.rate)).toFixed(2)} / day`;
+}
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;curSet=+b.dataset.i;renderTabs();renderSlabs()});
+$("#filters").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;curFilter=b.dataset.f;document.querySelectorAll("#filters .chip").forEach(c=>c.setAttribute("aria-pressed",c===b));renderSlabs()});
+$("#slabs").addEventListener("click",e=>{const b=e.target.closest(".tile");if(!b)return;const s=allSets()[curSet];const c=s.cards[+b.dataset.i];s===MY?openList(c):openRent(c)});
+
+/* ============ MODALS ============ */
+let lastFocus=null;
+function openModal(id){lastFocus=document.activeElement;const m=$(id);m.classList.add("open");setTimeout(()=>m.querySelector("button")?.focus(),30)}
+function closeModal(m){m.classList.remove("open");lastFocus?.focus?.()}
+document.querySelectorAll(".scrim").forEach(s=>{s.addEventListener("click",e=>{if(e.target===s||e.target.closest("[data-close]"))closeModal(s)})});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".scrim.open").forEach(closeModal)});
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("on");clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove("on"),3200)}
+
+/* ============ WALLET (Wallet Standard + injected providers) ============ */
+const standardWallets=[];
+function registerStd(...ws){for(const w of ws){if(!w?.features?.["standard:connect"])continue;if(!(w.chains||[]).some(c=>c.startsWith("solana:")))continue;if(!standardWallets.find(x=>x.name===w.name))standardWallets.push(w)}}
+try{
+  window.addEventListener("wallet-standard:register-wallet",({detail:cb})=>{try{cb({register:registerStd})}catch(_){}} );
+  window.dispatchEvent(new CustomEvent("wallet-standard:app-ready",{detail:{register:registerStd}}));
+}catch(_){}
+
+const INJECTED=[
+  {name:"Phantom",get:()=>window.phantom?.solana?.isPhantom?window.phantom.solana:(window.solana?.isPhantom?window.solana:null),url:"https://phantom.com/download",color:"#ab9ff2"},
+  {name:"Solflare",get:()=>window.solflare?.isSolflare?window.solflare:null,url:"https://solflare.com/download",color:"#fc7227"},
+  {name:"Backpack",get:()=>window.backpack?.isBackpack?window.backpack:null,url:"https://backpack.app/downloads",color:"#e33e3f"},
+];
+const wallet={kind:null,name:null,provider:null,std:null,account:null,address:null};
+
+function walletOptions(){
+  const opts=standardWallets.map(w=>({name:w.name,icon:w.icon,std:w,installed:true}));
+  for(const i of INJECTED){
+    if(opts.find(o=>o.name.toLowerCase().includes(i.name.toLowerCase())))continue;
+    const p=i.get(); opts.push({name:i.name,color:i.color,provider:p,installed:!!p,url:i.url});
+  }
+  return opts;
+}
+function renderWalletModal(){
+  if(wallet.address){
+    $("#wTitle").textContent="Wallet connected";
+    $("#wBody").innerHTML=`<div class="panel" style="background:var(--ink-3);border:0"><div class="lab">${esc(wallet.name)}</div><div class="addr" style="margin:6px 0 14px">${wallet.address}</div><div class="kv"><span>SOL balance</span><b id="wBal">Checking…</b></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"><button class="btn btn-ghost" id="wCopy">Copy address</button><button class="btn btn-solid" id="wOut">Disconnect</button></div>`;
+    $("#wCopy").onclick=()=>{navigator.clipboard?.writeText(wallet.address).then(()=>toast("Address copied"),()=>toast("Copy blocked by the browser"))};
+    $("#wOut").onclick=disconnect;
+    loadBalance();
+    return;
+  }
+  $("#wTitle").textContent="Connect a wallet";
+  const opts=walletOptions();
+  $("#wBody").innerHTML=`<div class="wlist">${opts.map((o,i)=>o.installed
+    ?`<button class="wbtn" data-w="${i}">${o.icon?`<img src="${o.icon}" alt="">`:`<span class="wi" style="background:${o.color};color:#111">${o.name[0]}</span>`}<b>${esc(o.name)}</b><small class="ok">Detected</small></button>`
+    :`<a class="wbtn" href="${o.url}" target="_blank" rel="noopener"><span class="wi" style="background:${o.color};color:#111">${o.name[0]}</span><b>${esc(o.name)}</b><small>Install</small></a>`).join("")}</div>`;
+  $("#wBody").querySelectorAll("[data-w]").forEach(b=>b.onclick=()=>connect(opts[+b.dataset.w]));
+  $("#wMsg").className="msg";
+  $("#wMsg").textContent=opts.some(o=>o.installed)?"":"No Solana wallet detected in this browser. Install one, then reload this page. Some wallet extensions don’t inject into embedded previews; open the page in its own tab if yours is installed.";
+}
+async function connect(o){
+  $("#wMsg").className="msg";$("#wMsg").textContent=`Approve the connection in ${o.name}…`;
+  try{
+    if(o.std){
+      const {accounts}=await o.std.features["standard:connect"].connect();
+      const acc=accounts.find(a=>(a.chains||[]).some(c=>c.startsWith("solana:")))||accounts[0];
+      if(!acc)throw new Error("The wallet returned no accounts.");
+      Object.assign(wallet,{kind:"std",name:o.name,std:o.std,account:acc,address:acc.address,provider:null});
+      o.std.features["standard:events"]?.on?.("change",({accounts})=>{if(accounts&&!accounts.length)clearWallet();else if(accounts?.[0]){wallet.account=accounts[0];wallet.address=accounts[0].address;afterConnect()}});
+    }else{
+      const p=o.provider; await p.connect();
+      const pk=p.publicKey?.toString(); if(!pk)throw new Error("The wallet didn’t share a public key.");
+      Object.assign(wallet,{kind:"inj",name:o.name,provider:p,address:pk,std:null,account:null});
+      p.on?.("accountChanged",k=>{if(k){wallet.address=k.toString();afterConnect()}else clearWallet()});
+      p.on?.("disconnect",clearWallet);
+    }
+    // validate with web3.js
+    if(window.solanaWeb3){new solanaWeb3.PublicKey(wallet.address)}
+    try{localStorage.setItem("gy-wallet",o.name)}catch(_){}
+    afterConnect(); renderWalletModal(); toast(`Connected ${short(wallet.address)}`);
+  }catch(err){
+    $("#wMsg").className="msg err";
+    $("#wMsg").textContent=err?.code===4001||/reject/i.test(err?.message)?"Connection request was declined in the wallet. Try again when ready.":`Couldn’t connect: ${err?.message||err}`;
+  }
+}
+async function disconnect(){
+  try{ if(wallet.kind==="std")await wallet.std.features["standard:disconnect"]?.disconnect(); else await wallet.provider?.disconnect?.() }catch(_){}
+  clearWallet(); try{localStorage.removeItem("gy-wallet")}catch(_){}
+  closeModal($("#walletScrim")); toast("Wallet disconnected");
+}
+function clearWallet(){Object.assign(wallet,{kind:null,name:null,provider:null,std:null,account:null,address:null});afterConnect()}
+const short=a=>a?a.slice(0,4)+"…"+a.slice(-4):"";
+function afterConnect(){
+  const nb=$("#navWallet");
+  if(wallet.address){
+    nb.innerHTML=`<span class="dot"></span>${short(wallet.address)}`;
+    $("#walletPanel").innerHTML=`<h4>Wallet connected</h4><p>${esc(wallet.name)}</p><div class="addr" style="margin-bottom:16px">${short(wallet.address)}</div><button class="btn btn-ghost" id="panelConnect">Manage wallet</button>`;
+  }else{
+    nb.textContent="Connect wallet";
+    $("#walletPanel").innerHTML=`<h4>Connect your wallet</h4><p>Use Phantom, Solflare, Backpack or any Wallet Standard wallet. Renting needs USDC or CARDS on Solana.</p><button class="btn btn-solid" id="panelConnect">Connect wallet</button>`;
+  }
+  $("#panelConnect").onclick=openWallet;
+  if(wallet.address&&MY.owner!==wallet.address)loadWalletCards();
+  if(!wallet.address){MY.owner=null;MY.cards=[];MY.state="idle"}
+  renderTabs();renderSlabs();
+}
+async function loadBalance(){
+  const el=$("#wBal"); if(!el)return;
+  try{
+    if(!window.solanaWeb3)throw new Error("sdk");
+    const conn=new solanaWeb3.Connection(RPC_URL||"https://api.mainnet-beta.solana.com","confirmed");
+    const lam=await conn.getBalance(new solanaWeb3.PublicKey(wallet.address));
+    el.textContent=(lam/solanaWeb3.LAMPORTS_PER_SOL).toLocaleString(undefined,{maximumFractionDigits:4})+" SOL";
+  }catch(_){ el.textContent="Unavailable here"; el.title="This host blocks RPC requests. Set RPC_URL and self-host to show balances."; }
+}
+function openWallet(){renderWalletModal();openModal("#walletScrim")}
+$("#navWallet").onclick=openWallet;
+// silent reconnect for trusted injected wallets
+window.addEventListener("load",async()=>{
+  let pref=null;try{pref=localStorage.getItem("gy-wallet")}catch(_){}
+  if(!pref)return;
+  const i=INJECTED.find(x=>x.name===pref); const p=i?.get();
+  if(p?.connect){try{await p.connect({onlyIfTrusted:true});if(p.publicKey){Object.assign(wallet,{kind:"inj",name:i.name,provider:p,address:p.publicKey.toString()});afterConnect()}}catch(_){}}
+});
+
+/* ============ RENT FLOW ============ */
+let rent={card:null,days:7,cur:"USDC"};
+function openRent(c){
+  rent.card=c;
+  $("#rTitle").textContent=c.rentedDays?`${c.name} is on lease`:`Rent ${c.name}`;
+  $("#rSlab").innerHTML=slabHTML(c);
+  $("#rWin").innerHTML=[3,7,14,30].map(d=>`<button aria-pressed="${d===rent.days}" data-d="${d}">${d} days</button>`).join("");
+  $("#rCur").innerHTML=["USDC","CARDS"].map(k=>`<button aria-pressed="${k===rent.cur}" data-c="${k}">${k}</button>`).join("");
+  $("#rReceipt").classList.remove("on");$("#rMsg").textContent="";$("#rMsg").className="msg";
+  updateRent();openModal("#rentScrim");
+}
+function updateRent(){
+  const c=rent.card,usd=c.rate*rent.days;
+  const amt=rent.cur==="USDC"?usd:usd*CARDS_PER_USDC;
+  const fmt=n=>n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+  $("#rTotal").textContent=`${fmt(amt)} ${rent.cur}`;
+  $("#rRate").textContent=rent.cur==="USDC"?`${fmt(c.rate)} USDC`:`${fmt(c.rate*CARDS_PER_USDC)} CARDS`;
+  const start=new Date(Date.now()+(c.rentedDays||0)*864e5), end=new Date(start.getTime()+rent.days*864e5);
+  $("#rEnd").textContent=end.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});
+  const go=$("#rGo");
+  go.disabled=false;
+  go.textContent=!wallet.address?"Connect wallet to rent":c.rentedDays?`Queue for ${rent.days} days`:`Rent for ${rent.days} days`;
+}
+$("#rWin").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;rent.days=+b.dataset.d;$("#rWin").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));updateRent()});
+$("#rCur").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;rent.cur=b.dataset.c;$("#rCur").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));updateRent()});
+$("#rGo").onclick=async()=>{
+  if(!wallet.address){openWallet();return}
+  const c=rent.card,usd=c.rate*rent.days, amt=rent.cur==="USDC"?usd:usd*CARDS_PER_USDC;
+  const terms=`GrailYield rental request\nCard: ${c.name} (${c.set} #${c.num}, ${c.grade})\nWindow: ${rent.days} days\nPrice: ${amt.toFixed(2)} ${rent.cur}\nRenter: ${wallet.address}\nReceipt: non-transferable display only\nIssued: ${new Date().toISOString()}`;
+  const msg=new TextEncoder().encode(terms);
+  $("#rMsg").className="msg";$("#rMsg").textContent=`Sign the rental terms in ${wallet.name}…`;
+  $("#rGo").disabled=true;
+  try{
+    let sig;
+    if(wallet.kind==="std"){
+      const f=wallet.std.features["solana:signMessage"]; if(!f)throw new Error("This wallet doesn’t support message signing.");
+      const [out]=await f.signMessage({account:wallet.account,message:msg}); sig=out.signature;
+    }else{
+      if(!wallet.provider.signMessage)throw new Error("This wallet doesn’t support message signing.");
+      const out=await wallet.provider.signMessage(msg,"utf8"); sig=out.signature||out;
+    }
+    const hex=Array.from(sig.slice(0,8)).map(b=>b.toString(16).padStart(2,"0")).join("");
+    c.mine=true; if(!c.rentedDays)c.rentedDays=rent.days;
+    $("#rMsg").textContent="Terms signed. In production this step sends the payment transaction to the rental program.";
+    $("#rReceipt").innerHTML=`<b>Display receipt issued</b><br>${esc(c.name)} · ${rent.days} days · sig ${hex}…<br><span style="color:var(--mute)">Non-transferable. Visible on your profile until ${$("#rEnd").textContent}.</span>`;
+    $("#rReceipt").classList.add("on");
+    renderSlabs(); toast("Display receipt issued");
+  }catch(err){
+    $("#rMsg").className="msg err";
+    $("#rMsg").textContent=err?.code===4001||/reject/i.test(err?.message)?"Signature declined. Nothing was charged.":`Couldn’t sign: ${err?.message||err}`;
+  }finally{$("#rGo").disabled=false}
+};
+
+/* ============ ON-CHAIN CARD IMAGES (DAS) ============ */
+async function das(method,params){
+  const r=await fetch(RPC_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:"gy",method,params})});
+  if(!r.ok)throw new Error("RPC returned "+r.status);
+  const j=await r.json(); if(j.error)throw new Error(j.error.message||"RPC error"); return j.result;
+}
+const imageOf=a=>a?.content?.files?.find(f=>f.cdn_uri)?.cdn_uri||a?.content?.links?.image||a?.content?.files?.[0]?.uri||null;
+const attr=(a,re)=>a?.content?.metadata?.attributes?.find(t=>re.test(t.trait_type||""))?.value;
+const SET_KEYS={base:/\bbase\b/,jungle:/\bjungle\b/,fossil:/\bfossil\b/,rocket:/\brocket\b/};
+const norm=t=>String(t||"").toLowerCase().replace(/[’'`]/g,"").replace(/[^a-z0-9#]+/g," ").trim();
+function matchCard(a){
+  const n=norm(a?.content?.metadata?.name)+" "+norm(attr(a,/set/i));
+  for(const set of SETS){
+    if(!SET_KEYS[set.id].test(n))continue;
+    // longest names first so "dark charizard" beats "charizard"
+    const hit=[...set.cards].sort((x,y)=>y.name.length-x.name.length).find(c=>new RegExp("\\b"+norm(c.name).replace(/ /g,"\\s+")+"\\b").test(n));
+    if(hit&&(set.id!=="rocket"||!/^dark /.test(norm(hit.name))||/\bdark\b/.test(n)))return hit;
+  }
+  return null;
+}
+async function loadVaultListings(){
+  if(!RPC_URL||!VAULT_ADDRESSES.length)return;
+  for(const owner of VAULT_ADDRESSES){
+    try{
+      let page=1;
+      while(true){
+        const r=await das("getAssetsByOwner",{ownerAddress:owner,page,limit:1000});
+        for(const a of r.items||[]){
+          if(/Fungible/.test(a.interface||"")||a.burnt)continue;
+          if(CC_COLLECTION&&!(a.grouping||[]).some(g=>g.group_key==="collection"&&g.group_value===CC_COLLECTION))continue;
+          const c=matchCard(a); if(!c||c.image)continue;
+          c.image=imageOf(a); c.mint=a.id;
+          const g=attr(a,/grade/i); if(g)c.grade=/psa/i.test(g)?String(g):"PSA "+g;
+        }
+        if(!r.items||r.items.length<1000||page>=10)break; page++;
+      }
+    }catch(e){console.warn("Vault listings unavailable for",owner,e.message)}
+  }
+  renderSlabs();
+}
+async function loadListingImages(){
+  if(!RPC_URL){console.info("GrailYield: set RPC_URL in config.js to load card images.");return}
+  await loadVaultListings();
+  const cards=SETS.flatMap(s=>s.cards).filter(c=>c.mint&&!c.image); if(!cards.length)return;
+  try{
+    for(let i=0;i<cards.length;i+=1000){
+      const chunk=cards.slice(i,i+1000);
+      const res=await das("getAssetBatch",{ids:chunk.map(c=>c.mint)});
+      res.forEach((a,j)=>{const img=imageOf(a);if(img)chunk[j].image=img});
+    }
+    renderSlabs();
+  }catch(e){console.warn("Listing images unavailable:",e.message)}
+}
+async function loadWalletCards(){
+  MY.owner=wallet.address;MY.state="loading";MY.cards=[];renderTabs();if(allSets()[curSet]===MY)renderSlabs();
+  try{
+    if(!RPC_URL)throw new Error("RPC_URL is not set in config.js");
+    let page=1,items=[];
+    while(true){
+      const r=await das("getAssetsByOwner",{ownerAddress:wallet.address,page,limit:1000});
+      items=items.concat(r.items||[]); if(!r.items||r.items.length<1000||page>=5)break; page++;
+    }
+    if(MY.owner!==wallet.address)return;
+    items=items.filter(a=>!/Fungible/.test(a.interface||"")&&!a.burnt)
+      .filter(a=>!CC_COLLECTION||(a.grouping||[]).some(g=>g.group_key==="collection"&&g.group_value===CC_COLLECTION));
+    MY.cards=items.map((a,i)=>({num:i+1,name:a.content?.metadata?.name||"Untitled card",type:"colorless",rate:0,rentedDays:0,
+      image:imageOf(a),mint:a.id,set:"Wallet",grade:String(attr(a,/grad/i)||attr(a,/grader|company/i)||"pNFT"),owned:true}));
+    MY.state="ready";
+  }catch(e){
+    MY.state="error";
+    MY.err=`Couldn't load your cards from the RPC (${e.message}). Set RPC_URL to a DAS-enabled endpoint such as Helius and deploy the site to load them.`;
+  }
+  renderTabs();if(allSets()[curSet]===MY)renderSlabs();
+}
+
+/* ============ LIST FOR RENT (owner) ============ */
+let listing=null;
+function openList(c){
+  listing=c;
+  $("#lTitle").textContent=`List ${c.name}`;$("#lSlab").innerHTML=slabHTML(c);
+  $("#lMsg").textContent="";$("#lMsg").className="msg";$("#lDone").classList.remove("on");
+  openModal("#listScrim");
+}
+$("#lGo").onclick=async()=>{
+  const rate=parseFloat($("#lRate").value);
+  if(!(rate>0)){$("#lMsg").className="msg err";$("#lMsg").textContent="Enter a daily rate above 0.";return}
+  const wins=[...document.querySelectorAll("#lWins input:checked")].map(i=>i.value);
+  if(!wins.length){$("#lMsg").className="msg err";$("#lMsg").textContent="Pick at least one lease window.";return}
+  const terms=`GrailYield listing\nCard: ${listing.name}\nMint: ${listing.mint}\nDaily rate: ${rate} USDC (or CARDS equivalent)\nWindows: ${wins.join(", ")} days\nOwner: ${wallet.address}\nIssued: ${new Date().toISOString()}`;
+  $("#lMsg").className="msg";$("#lMsg").textContent=`Sign the listing terms in ${wallet.name}…`;$("#lGo").disabled=true;
+  try{
+    await signTerms(terms);
+    $("#lMsg").textContent="Listing signed. In production this step locks the pNFT in the rental program.";
+    $("#lDone").innerHTML=`<b>Listed</b><br>${esc(listing.name)} at ${rate.toFixed(2)} USDC a day, ${wins.join(" / ")} day windows.`;
+    $("#lDone").classList.add("on");toast("Listing signed");
+  }catch(err){$("#lMsg").className="msg err";$("#lMsg").textContent=err?.code===4001||/reject/i.test(err?.message)?"Signature declined. Nothing was listed.":`Couldn’t sign: ${err?.message||err}`}
+  finally{$("#lGo").disabled=false}
+};
+async function signTerms(text){
+  const msg=new TextEncoder().encode(text);
+  if(wallet.kind==="std"){const f=wallet.std.features["solana:signMessage"];if(!f)throw new Error("This wallet doesn’t support message signing.");const [o]=await f.signMessage({account:wallet.account,message:msg});return o.signature}
+  if(!wallet.provider?.signMessage)throw new Error("This wallet doesn’t support message signing.");
+  const o=await wallet.provider.signMessage(msg,"utf8");return o.signature||o;
+}
+
+/* ============ YIELD CALC ============ */
+function calc(){
+  const v=+$("#cVal").value,r=+$("#cRate").value,u=+$("#cUtil").value,b=+$("#cBuy").value;
+  const $f=n=>"$"+Math.round(n).toLocaleString();
+  $("#oVal").textContent=$f(v);$("#oRate").textContent=r.toFixed(2)+"%";$("#oUtil").textContent=u+" days";$("#oBuy").textContent=b+"%";
+  const rentY=v*(r/100)*u, loss=v*(1-b/100);
+  $("#cRent").textContent=$f(rentY); $("#cLoss").textContent=$f(loss);
+  const apy=rentY/v*100;
+  $("#cHead").textContent=`${apy.toFixed(1)}% a year on a card you still own.`;
+}
+["#cVal","#cRate","#cUtil","#cBuy"].forEach(id=>$(id).addEventListener("input",calc));
+
+/* ============ HERO ANIMATION ============ */
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const heroCards=[SETS[0].cards[3],SETS[2].cards[11],SETS[3].cards[2],SETS[0].cards[9],SETS[2].cards[3]];
+let hi=0, timers=[];
+const later=(fn,ms)=>timers.push(setTimeout(fn,ms));
+function heroCycle(){
+  timers.forEach(clearTimeout);timers=[];
+  const c=heroCards[hi%heroCards.length]; hi++;
+  const days=[7,14,30][hi%3], paid=Math.round(c.rate*days);
+  $("#heroSlab").innerHTML=slabHTML(c,true);
+  $("#hWin").textContent=days+" days"; $("#hPaid").textContent=paid+" USDC"; $("#payChip").textContent="+"+paid+" USDC";
+  ["#t1","#t2","#t3","#t4"].forEach(t=>$(t).classList.remove("on","ok"));
+  $("#hBadge").classList.remove("on"); $("#hBadge").textContent="Display receipt issued";
+  $("#hEarn").textContent="$0.00"; $("#hBar").style.transition="none"; $("#hBar").style.transform="scaleX(1)";
+  $("#hLeft").textContent="Lease not started"; $("#hcTitle").textContent=c.name+" lease"; $("#hcStep").textContent="1 / 4";
+  if(reduce){["#t1","#t2","#t3","#t4"].forEach(t=>$(t).classList.add("on","ok"));$("#hEarn").textContent="$"+paid+".00";$("#hLeft").textContent=days+" days left";return}
+  later(()=>{$("#t1").classList.add("on","ok");$("#hcStep").textContent="1 / 4"},500);
+  later(()=>{$("#t2").classList.add("on","ok");$("#hcStep").textContent="2 / 4"},1300);
+  later(()=>{const ch=$("#payChip");ch.classList.remove("fly");void ch.offsetWidth;ch.classList.add("fly")},2000);
+  later(()=>{$("#t3").classList.add("on","ok");$("#hcStep").textContent="3 / 4";countUp(paid)},2900);
+  later(()=>{$("#t4").classList.add("on","ok");$("#hBadge").classList.add("on")},3700);
+  later(()=>{$("#hBadge").classList.remove("on");$("#hcStep").textContent="4 / 4";
+    const bar=$("#hBar");bar.style.transition="transform 3.4s linear";bar.style.transform="scaleX(0)";
+    let d=days;const iv=setInterval(()=>{d=Math.max(0,d-Math.ceil(days/10));$("#hLeft").textContent=d?d+" days left":"Lease ended"},340);timers.push(setTimeout(()=>clearInterval(iv),3500));
+  },5400);
+  later(()=>{$("#hBadge").textContent="Slab back with owner";$("#hBadge").classList.add("on")},9000);
+  later(heroCycle,11200);
+}
+function countUp(to){const t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/900);$("#hEarn").textContent="$"+(to*(1-Math.pow(1-p,3))).toFixed(2);if(p<1)requestAnimationFrame(f)})(t0)}
+document.addEventListener("visibilitychange",()=>{if(document.hidden)timers.forEach(clearTimeout);else heroCycle()});
+
+/* ============ MENU ============ */
+$("#menuBtn").onclick=()=>{const n=$("#mainnav"),o=n.classList.toggle("open");$("#menuBtn").setAttribute("aria-expanded",o)};
+$("#mainnav").addEventListener("click",e=>{if(e.target.tagName==="A"){$("#mainnav").classList.remove("open");$("#menuBtn").setAttribute("aria-expanded","false")}});
+
+/* ============ INIT ============ */
+renderTabs();renderSlabs();calc();afterConnect();heroCycle();loadListingImages();
+requestAnimationFrame(()=>document.body.classList.add("ready"));
+</script>
+</body>
+</html>
